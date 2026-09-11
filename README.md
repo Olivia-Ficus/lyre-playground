@@ -18,7 +18,7 @@ All seven strings remain playable throughout. Choosing **Discover another sound*
 
 ## Demo
 
-Production deployment is pending Vercel account authorization. The live demo URL will be added after deployment is verified.
+Live demo: https://lyre-playground.vercel.app
 
 ## Tech Stack
 
