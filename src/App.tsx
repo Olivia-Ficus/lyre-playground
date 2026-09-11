@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/react';
 import { Lyre } from './Lyre';
 import { DiscoveryPrompt, DiscoveryFeedback } from './DiscoveryPresentation';
 import { hasHighlights } from './discovery';
@@ -12,6 +13,7 @@ export default function App({ logger }: { logger: EventLogger }) {
       <DiscoveryPrompt state={snapshot.state} noticeReady={noticeReady} />
       <Lyre highlighted={hasHighlights(snapshot.state)} revisions={revisions} onPluck={pluck} />
       <DiscoveryFeedback state={snapshot.state} onContinue={continueDiscovery} audioError={audioError} />
+      <Analytics />
     </main>
   );
 }
