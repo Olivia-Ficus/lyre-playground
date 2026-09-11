@@ -1,6 +1,6 @@
 # Lyre Playground MVP — implementation plan
 
-Updated September 10, 2026, before implementation. The user's approved body image replaces the previous SVG-body plan. All Discovery, audio, event and acceptance requirements remain unchanged. The PRD is product reference; the user's latest request controls this asset decision.
+Updated September 11, 2026 for the visual replacement: Image A (11_24_53 AM) is the immutable stringless body; Image B (11_25_02 AM) is the finished-string style reference. All Discovery, audio, event and acceptance requirements remain unchanged. The PRD is product reference; the user's latest request controls the asset and tapered-string geometry.
 
 ## 1. Current Repository Assessment
 
@@ -17,8 +17,8 @@ Greenfield Git repository, no commits or application files. Use React, TypeScrip
 - One page load is one session. discovery_started means entry to FIVE_NOTE_PLAY; exploration_completed means entry to NOTICE; discovery_completed means entry to DISCOVER.
 - Preserve the required sentence “There is no wrong note.” despite AC-08's ban on evaluative Wrong feedback.
 - Count successful audio scheduling on a running context, not failed audio attempts. Hardware audibility cannot be detected.
-- The approved 1122 × 1402 transparent PNG is immutable. Seven vertical strings attach at y=180 on the crossbar and y=1138 on the existing bridge, at x=410,460,510,560,610,660,710. No body geometry is added.
-- The image's narrow bridge constrains vertical string spacing. Use tall, distinct 50-asset-unit hit lanes; the recommended ~40 CSS-pixel width cannot be achieved on small phones without overlapping targets or changing the approved geometry. This remains a documented manual touch-usability risk, not a reason to distort the image.
+- Image A's approved 1122 × 1402 transparent PNG is immutable. Seven strings start across the crossbar at x=370–682/y=194, pass across the bridge at x=421–631/y=936, and converge at x=490–562/y=1240–1246 on the existing bottom anchor. No body geometry is added.
+- Stationary polygon hit lanes taper from 52 to 35 to 12 asset units along the string geometry. The recommended ~40 CSS-pixel width cannot be achieved on small phones without overlapping targets or changing the approved geometry. This remains a documented manual touch-usability risk, not a reason to distort the image.
 
 ## 3. Architecture Decision
 
@@ -77,9 +77,9 @@ Use native Web Audio synthesis: cached, locally generated Karplus–Strong-style
 
 Use the approved image directly; do not crop, stretch, filter, redraw or approximate it. A single responsive wrapper has aspect-ratio 1122 / 1402. The img fills its width with auto height; the absolute SVG occupies the same bounds with viewBox="0 0 1122 1402" and preserveAspectRatio="xMidYMid meet". Both scale together. Desktop width approximately 460px; mobile approximately 88vw.
 
-Seven straight strings run from the visible crossbar at y=180 to the existing lower bridge at y=1138, using the x coordinates in instrument.ts. Visible string paths bend around a vibrating midpoint while endpoints remain fixed. Invisible hit rectangles never animate and remain siblings of visible paths. No decorative overlay geometry is permitted.
+Seven coded strings follow Image B's widening crossbar spacing, narrower bridge span and centered tail convergence, using the attachment coordinates in instrument.ts. Only the long playable span bends during vibration; crossbar, bridge and tail attachments remain fixed. Stationary polygon hit lanes follow the tapered rest geometry. A pale inner strand with a restrained brown-gold edge evokes Image B's natural strings. The image and overlay shift together by approximately 3.12% to center the padded asset's actual instrument axis. No decorative body geometry is permitted.
 
-Keep background #F3EFE6, primary #2C2924, secondary #736D63, strings #B8AA93, highlights #D3A65A. Dim other strings but keep them playable. Warm body color comes from the supplied image, not CSS recoloring. Georgia prompt at 32–40px desktop / 26–32px mobile, supporting text 16–18px. Only 450ms damped vibration and subtle prompt/highlight/CTA fades. Reduced motion uses a restrained string pulse.
+Keep background #F3EFE6, primary #2C2924 and secondary #736D63. Strings use pale #ECD0A0 cores and #9B7442 edges; highlights use warmer #FFE0A1 cores and #B57C2C edges. Dim other strings but keep them playable. Body materials come from Image A, not CSS recoloring. Georgia prompt at 32–40px desktop / 26–32px mobile, supporting text 16–18px. Only 450ms damped vibration and subtle prompt/highlight/CTA fades. Reduced motion uses a restrained string pulse.
 
 Quiet wordmark → Prompt → largest visual object (lyre) → Feedback/CTA. Allow vertical scrolling on short screens. Mouse/touch pointerdown once per pluck, keyboard Enter/Space, neutral String 1–7 accessible names. No drag strumming, visible pitch labels, progress UI or body decoration.
 

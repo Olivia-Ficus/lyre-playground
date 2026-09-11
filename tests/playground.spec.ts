@@ -99,7 +99,7 @@ test('asset is unmodified, overlay shares its bounds, strings attach and hit are
   const asset = await page.locator('.lyre-body').getAttribute('src');
   const response = await page.request.get(asset!);
   const hash = (data: Buffer) => createHash('sha256').update(data).digest('hex');
-  expect(hash(readFileSync('src/assets/lyre-body.png'))).toBe('bf4fa6c6162445ee4753908a1379ca70b0105974516736cb6782342444df8aa9');
+  expect(hash(readFileSync('src/assets/lyre-body.png'))).toBe('86096c62320fdb4173f7aab42af5f1e0fe82d6c9fb8dcc3d3e4f4885a9072c59');
   expect(hash(await response.body())).toBe(hash(readFileSync('src/assets/lyre-body.png')));
   for (const width of [320, 390, 768, 1280]) {
     await page.setViewportSize({ width, height: 900 });
@@ -115,14 +115,28 @@ test('asset is unmodified, overlay shares its bounds, strings attach and hit are
     expect(feedback!.y).toBeGreaterThanOrEqual(img!.y + img!.height);
   }
   await expect(page.locator('.lyre-overlay path')).toHaveCount(7);
-  await expect(page.locator('.lyre-overlay rect')).toHaveCount(7);
+  await expect(page.locator('.lyre-overlay polygon')).toHaveCount(7);
+  const attachments = await page.locator('.lyre-overlay path').evaluateAll(paths => paths.map(path => {
+    const points = path.getAttribute('d')!.match(/-?\d+(?:\.\d+)?/g)!.map(Number);
+    return { top: points[0], bridge: points[6], tail: points[8] };
+  }));
+  // Image A's existing bridge spans approximately x=407–656; keep every contact inset.
+  for (const attachment of attachments) {
+    expect(attachment.bridge).toBeGreaterThan(407);
+    expect(attachment.bridge).toBeLessThan(656);
+    expect(attachment.tail).toBeGreaterThanOrEqual(490);
+    expect(attachment.tail).toBeLessThanOrEqual(562);
+  }
+  for (let index = 1; index < attachments.length; index++) {
+    expect(attachments[index].top - attachments[index - 1].top).toBe(52);
+  }
   const hit = page.getByRole('button', { name: 'String 1', exact: true });
   const before = await hit.boundingBox();
   await pluck(page, [0]);
   await expect(page.locator('[data-string-id="0"] path')).toHaveAttribute('data-revision', '1');
   expect(await hit.boundingBox()).toEqual(before);
   await expect(page.locator('[data-string-id="1"] path')).toHaveAttribute('data-revision', '0');
-  await expect(page.locator('[data-string-id="0"] path')).toHaveAttribute('d', 'M 410 180 Q 410 659 410 1138');
+  await expect(page.locator('[data-string-id="0"] path')).toHaveAttribute('d', 'M 370 194 L 370 246 Q 395.5 591 421 936 L 490 1246');
   await pluck(page, [0]);
   await expect(page.locator('[data-string-id="0"] path')).toHaveAttribute('data-revision', '2');
   expect(await hit.boundingBox()).toEqual(before);
